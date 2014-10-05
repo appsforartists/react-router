@@ -14,11 +14,13 @@ describe('PathDelegate', function () {
   });
 
   describe('makePath', function () {
+
     describe('when there is a route with the given name', function () {
       var component;
       beforeEach(function () {
         component = ReactTestUtils.renderIntoDocument(
-          App(null, 
+          App(null,
+            Route({ name: 'foo.bar', path: '/baz.qux', handler: App }),
             Route({ name: 'home', path: '/:username/home', handler: App })
           )
         );
@@ -26,6 +28,10 @@ describe('PathDelegate', function () {
 
       afterEach(function () {
         React.unmountComponentAtNode(component.getDOMNode());
+      });
+
+      it('handles dots in the name', function() {
+        expect(component.makePath('foo.bar')).toEqual('/baz.qux');
       });
 
       it('creates the correct path', function () {
